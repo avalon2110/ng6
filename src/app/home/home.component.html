@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="d-flex justify-content-center align-items-center">
+
+      <div class="form-group select-list">
+        <label for="exampleFormControlSelect1">Select Country</label>
+        <select class="form-control" id="exampleFormControlSelect1" name="city" (change)="onChangeCity($event.target.value)">
+          <option *ngFor="let city of city$"  name="city" id="city" value="{{city.id}}">
+              {{ city.name }}
+
+
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group select-list">
+        <label for="exampleFormControlSelect1">Select Competency</label>
+        <select class="form-control" id="exampleFormControlSelect2" name="competency" (change)="onChangeCompetency($event.target.value)">
+          <option *ngFor="let competency of competency$" name="competency" id="competency" value="{{competency.id}}" >
+            {{ competency.name }}
+          </option>
+        </select>
+      </div>
+
+      <button type="button" class="btn btn-info select-list" value="submit" (click)="sendData()">Submit</button>
+
+  </div>
+</div>
