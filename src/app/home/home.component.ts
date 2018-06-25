@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-home',
@@ -8,8 +9,11 @@ import { Observable } from 'rxjs';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  city_url: string = 'https://roundlaw.com/api/v1/places/cities';
+  competency_url: string = 'https://roundlaw.com/api/v1/competencies';
   competency_id: string;
   city_id: string;
+  lawers: Array<Object> = [];
   city$: Object;
   competency$: Object;
 
@@ -17,34 +21,36 @@ export class HomeComponent implements OnInit {
   constructor(private data: DataService) { }
 
   ngOnInit() {
-    this.data.getCity().subscribe(
-      data => this.city$ = data
-    );
-
-    this.data.getCompetency().subscribe(
-      data => this.competency$ = data
-    );
-
+    this.data.get(this.city_url).subscribe(data => this.city$ = data);
+    this.data.get(this.competency_url).subscribe(data => this.competency$ = data);
   }
 
-  onSelect(city) {
-    console.log(city);
-  }
-
-  onChangeCity(val) {
+  public onChangeCity(val:string) {
     this.city_id = val;
-    console.log(val);
   }
 
-  onChangeCompetency(val) {
+  public onChangeCompetency(val:string) {
     this.competency_id = val;
-    console.log(val);
   }
 
-  sendData() {
-    this.data.get(`https://roundlaw.com/api/v1/users/filter?competency_id='${this.city_id}'&city_id='${this.competency_id}`)
-      .then(res => console.log(res));
-
+  private isEmptyObject(obj:Object) {
+    return !(obj && (Object.keys(obj).length === 0));
   }
 
+  private checkArray(arr){
+    return arr.filter(el => this.isEmptyObject(el))
+  }
+
+  private getLawers() {
+    return this.data.get(`https://roundlaw.com/api/v1/users/filter?competency_id='${this.city_id}'&city_id='${this.competency_id}`)
+  }
+
+  public sendData() {
+    // this.data.get(`https://roundlaw.com/api/v1/users/filter?competency_id=5&city_id=26`)
+    this.getLawers()
+      .subscribe(res => {
+        console.log(res);
+        this.lawers = this.checkArray(res);
+      });
+  }
 }
