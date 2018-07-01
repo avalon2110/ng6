@@ -21,8 +21,10 @@ export class HomeComponent implements OnInit {
   constructor(private data: DataService) { }
 
   ngOnInit() {
-    this.data.get(this.city_url).subscribe(data => this.city$ = data);
+    this.data.get(this.city_url).subscribe({data => this.city$ = data});
     this.data.get(this.competency_url).subscribe(data => this.competency$ = data);
+    console.log(this.city$);
+    console.log(this.competencies$);
   }
 
   public onChangeCity(val:string) {
